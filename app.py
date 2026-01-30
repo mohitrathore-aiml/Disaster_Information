@@ -7,26 +7,25 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# PostgreSQL configuration
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://postgres:password@localhost:5432/disaster_info"
-)
+# ==========================
+# PostgreSQL configuration (Railway - normal way)
+# ==========================
+PGHOST = os.getenv("PGHOST")
+PGPORT = os.getenv("PGPORT", "5432")
+PGDATABASE = os.getenv("PGDATABASE")
+PGUSER = os.getenv("PGUSER")
+PGPASSWORD = os.getenv("PGPASSWORD")
 
-# Railway / SQLAlchemy fixes
-if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+if not all([PGHOST, PGDATABASE, PGUSER, PGPASSWORD]):
+    raise RuntimeError("PostgreSQL environment variables are not set")
 
-# FORCE psycopg v3
-DATABASE_URL = DATABASE_URL.replace(
-    "postgresql://",
-    "postgresql+psycopg://",
-    1
+DATABASE_URL = (
+    f"postgresql+psycopg://{PGUSER}:{PGPASSWORD}"
+    f"@{PGHOST}:{PGPORT}/{PGDATABASE}"
 )
 
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
 
 db = SQLAlchemy(app)
 
@@ -73,7 +72,6 @@ class Volunteer(db.Model):
     location = db.Column(db.String(200))
     registered_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-
 # ==========================
 # Routes
 # ==========================
@@ -94,7 +92,7 @@ def get_alerts():
             "message": a.message,
             "severity": a.severity,
             "location": a.location,
-            "timestamp": a.timestamp
+            "timestamp": a.timestamp.isoformat()
         } for a in alerts
     ])
 
@@ -192,7 +190,7 @@ def get_volunteers():
             "skills": v.skills,
             "availability": v.availability,
             "location": v.location,
-            "registered_at": v.registered_at
+            "registered_at": v.registered_at.isoformat()
         } for v in volunteers
     ])
 
@@ -213,10 +211,20 @@ def register_volunteer():
     return jsonify({"id": volunteer.id}), 201
 
 
+# ---- Health Check ----
+@app.route("/health")
+def health():
+    return {"status": "ok"}
+
+
 # ==========================
 # Main
 # ==========================
 if __name__ == "__main__":
     with app.app_context():
-        db.create_all()
-    app.run(host="0.0.0.0", port=5000, debug=True)
+        try:
+            db.create_all()
+        except Exception as e:
+            print("Database not ready:", e)
+
+    app.run(host="0.0.0.0", port=5000)
