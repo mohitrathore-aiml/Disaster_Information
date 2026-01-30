@@ -13,12 +13,20 @@ DATABASE_URL = os.getenv(
     "postgresql://postgres:password@localhost:5432/disaster_info"
 )
 
-# Fix for Railway postgres URLs
+# Railway / SQLAlchemy fixes
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
+# FORCE psycopg v3
+DATABASE_URL = DATABASE_URL.replace(
+    "postgresql://",
+    "postgresql+psycopg://",
+    1
+)
+
 app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 
 db = SQLAlchemy(app)
 
