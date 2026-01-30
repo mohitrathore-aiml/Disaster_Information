@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Information & Emergency Help</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🚨 Disaster Information & Emergency Help</h1>
+            <p class="subtitle">Quick access to reliable information and support during emergencies</p>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <div class="container">
+            <ul>
+                <li><a href="#alerts" class="nav-link active">Alerts</a></li>
+                <li><a href="#helplines" class="nav-link">Helplines</a></li>
+                <li><a href="#safe-locations" class="nav-link">Safe Locations</a></li>
+                <li><a href="#volunteer" class="nav-link">Volunteer</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <!-- Alerts Section -->
+        <section id="alerts" class="section">
+            <h2>Emergency Alerts</h2>
+            <div class="alert-form">
+                <h3>Report New Alert</h3>
+                <form id="alertForm">
+                    <input type="text" id="alertTitle" placeholder="Alert Title" required>
+                    <textarea id="alertMessage" placeholder="Alert Message" required></textarea>
+                    <select id="alertSeverity" required>
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                        <option value="critical">Critical</option>
+                    </select>
+                    <input type="text" id="alertLocation" placeholder="Location (optional)">
+                    <button type="submit">Post Alert</button>
+                </form>
+            </div>
+            <div id="alertsList" class="alerts-list"></div>
+        </section>
+
+        <!-- Helplines Section -->
+        <section id="helplines" class="section">
+            <h2>Emergency Helplines</h2>
+            <div class="helpline-form">
+                <h3>Add Helpline</h3>
+                <form id="helplineForm">
+                    <input type="text" id="helplineName" placeholder="Service Name" required>
+                    <input type="tel" id="helplineNumber" placeholder="Phone Number" required>
+                    <select id="helplineCategory">
+                        <option value="general">General</option>
+                        <option value="medical">Medical</option>
+                        <option value="fire">Fire</option>
+                        <option value="police">Police</option>
+                        <option value="rescue">Rescue</option>
+                        <option value="shelter">Shelter</option>
+                    </select>
+                    <textarea id="helplineDescription" placeholder="Description (optional)"></textarea>
+                    <button type="submit">Add Helpline</button>
+                </form>
+            </div>
+            <div id="helplinesList" class="helplines-list"></div>
+        </section>
+
+        <!-- Safe Locations Section -->
+        <section id="safe-locations" class="section">
+            <h2>Safe Locations & Shelters</h2>
+            <div class="location-form">
+                <h3>Add Safe Location</h3>
+                <form id="locationForm">
+                    <input type="text" id="locationName" placeholder="Location Name" required>
+                    <input type="text" id="locationAddress" placeholder="Address" required>
+                    <div class="form-row">
+                        <input type="number" id="locationLat" placeholder="Latitude" step="any">
+                        <input type="number" id="locationLng" placeholder="Longitude" step="any">
+                    </div>
+                    <div class="form-row">
+                        <input type="number" id="locationCapacity" placeholder="Capacity" min="0">
+                        <input type="number" id="locationOccupancy" placeholder="Current Occupancy" min="0">
+                    </div>
+                    <input type="text" id="locationContact" placeholder="Contact Info">
+                    <textarea id="locationFacilities" placeholder="Facilities (comma-separated)"></textarea>
+                    <button type="submit">Add Location</button>
+                </form>
+            </div>
+            <div id="locationsList" class="locations-list"></div>
+        </section>
+
+        <!-- Volunteer Registration Section -->
+        <section id="volunteer" class="section">
+            <h2>Volunteer Registration</h2>
+            <div class="volunteer-form">
+                <h3>Register as Volunteer</h3>
+                <form id="volunteerForm">
+                    <input type="text" id="volunteerName" placeholder="Full Name" required>
+                    <input type="email" id="volunteerEmail" placeholder="Email" required>
+                    <input type="tel" id="volunteerPhone" placeholder="Phone Number" required>
+                    <input type="text" id="volunteerLocation" placeholder="Your Location" required>
+                    <textarea id="volunteerSkills" placeholder="Skills (comma-separated)"></textarea>
+                    <select id="volunteerAvailability">
+                        <option value="available">Available</option>
+                        <option value="limited">Limited Availability</option>
+                        <option value="unavailable">Currently Unavailable</option>
+                    </select>
+                    <button type="submit">Register</button>
+                </form>
+            </div>
+            <div id="volunteersList" class="volunteers-list"></div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Disaster Information & Emergency Help. Stay safe!</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
